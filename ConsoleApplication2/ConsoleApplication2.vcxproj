@@ -76,9 +76,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="DiskWavSink.h" />
     <ClInclude Include="Recorder.h" />
     <ClInclude Include="stdafx.h" />
