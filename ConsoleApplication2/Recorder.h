@@ -1,10 +1,10 @@
 #pragma once
-#include "DiskWavSink.h"
+#include "AudioSink.h"
 class Recorder
 {
 public:
 	Recorder();
 	~Recorder();
-	HRESULT RecordAudioStream(DiskWavSink *sink);
+	HRESULT RecordAudioStream(AudioSink *sink);
 };
 

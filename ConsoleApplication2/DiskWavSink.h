@@ -1,16 +1,11 @@
 #pragma once
 #include "stdafx.h"
-#include "Audioclient.h"
-#include "Audiopolicy.h"
-#include "Mmdeviceapi.h"
-class DiskWavSink
+#include "AudioSink.h"
+class DiskWavSink: public AudioSink 
 {
 public:
 	DiskWavSink();
 	~DiskWavSink();
-
-	HRESULT SetFormat(PWAVEFORMATEX pwfx);
-	HRESULT CopyData(BYTE *data, UINT32 availableFrames, BOOL *done);
 
 };
 

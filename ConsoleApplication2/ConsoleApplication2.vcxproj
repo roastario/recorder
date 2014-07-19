@@ -76,15 +76,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AudioSink.h" />
     <ClInclude Include="DiskWavSink.h" />
+    <ClInclude Include="kissfft.hh" />
+    <ClInclude Include="kiss_fft.h" />
+    <ClInclude Include="kiss_fftr.h" />
     <ClInclude Include="Recorder.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="XDSP.h" />
+    <ClInclude Include="_kiss_fft_guts.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Win32Project1\stdafx.cpp" />
     <ClCompile Include="ConsoleApplication2.cpp" />
     <ClCompile Include="DiskWavSink.cpp" />
+    <ClCompile Include="kiss_fft.c" />
+    <ClCompile Include="kiss_fftr.c" />
     <ClCompile Include="Recorder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

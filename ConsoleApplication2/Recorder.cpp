@@ -4,6 +4,8 @@
 #include "Audiopolicy.h"
 #include "Mmdeviceapi.h"
 
+#include <iostream>
+
 
 #define REFTIMES_PER_SEC  10000000
 #define REFTIMES_PER_MILLISEC  10000
@@ -47,7 +49,7 @@ Recorder::~Recorder()
 		SAFE_RELEASE(pCaptureClient)
 }
 
-HRESULT Recorder::RecordAudioStream(DiskWavSink *sink)
+HRESULT Recorder::RecordAudioStream(AudioSink *sink)
 {
 
 	HRESULT hr;
@@ -88,7 +90,7 @@ HRESULT Recorder::RecordAudioStream(DiskWavSink *sink)
 		hr = sink->SetFormat(pwfx);
 	EXIT_ON_ERROR(hr)
 		// Calculate the actual duration of the allocated buffer.
-		hnsActualDuration = (double)REFTIMES_PER_SEC * bufferFrameCount / pwfx->nSamplesPerSec;
+		hnsActualDuration = ((REFTIMES_PER_SEC * bufferFrameCount) / (double) pwfx->nSamplesPerSec);
 
 	hr = pAudioClient->Start();
 	EXIT_ON_ERROR(hr)
@@ -98,6 +100,7 @@ HRESULT Recorder::RecordAudioStream(DiskWavSink *sink)
 	{
 		// Sleep for half the buffer duration.
 		Sleep(hnsActualDuration / REFTIMES_PER_MILLISEC / 2);
+		std::cout << " FINISHED SLEEP" << std::endl;
 
 		hr = pCaptureClient->GetNextPacketSize(&packetLength);
 		EXIT_ON_ERROR(hr)

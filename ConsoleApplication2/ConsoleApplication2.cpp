@@ -6,15 +6,17 @@
 #include <iostream>
 #include "DiskWavSink.h"
 #include "Recorder.h"
+#include "kiss_fft.h"
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 
-	DiskWavSink * diskSink = new DiskWavSink();
+	AudioSink * diskSink = new DiskWavSink();
 	Recorder * recorder = new Recorder();
 
 	HRESULT result = recorder->RecordAudioStream(diskSink);
+	 
 	return result;
 }
 
