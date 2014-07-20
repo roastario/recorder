@@ -60,7 +60,7 @@ HRESULT Recorder::RecordAudioStream(AudioSink *sink)
 
 	EXIT_ON_ERROR(hr)
 
-		hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &pDevice);
+		hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &pDevice);
 
 
 	EXIT_ON_ERROR(hr)
@@ -87,7 +87,7 @@ HRESULT Recorder::RecordAudioStream(AudioSink *sink)
 	EXIT_ON_ERROR(hr)
 
 		// Notify the audio sink which format to use.
-		hr = sink->SetFormat(pwfx);
+		hr = sink->SetFormat(pwfx, bufferFrameCount);
 	EXIT_ON_ERROR(hr)
 		// Calculate the actual duration of the allocated buffer.
 		hnsActualDuration = ((REFTIMES_PER_SEC * bufferFrameCount) / (double) pwfx->nSamplesPerSec);
@@ -100,7 +100,7 @@ HRESULT Recorder::RecordAudioStream(AudioSink *sink)
 	{
 		// Sleep for half the buffer duration.
 		Sleep(hnsActualDuration / REFTIMES_PER_MILLISEC / 2);
-		std::cout << " FINISHED SLEEP" << std::endl;
+		//std::cout << " FINISHED SLEEP" << std::endl;
 
 		hr = pCaptureClient->GetNextPacketSize(&packetLength);
 		EXIT_ON_ERROR(hr)

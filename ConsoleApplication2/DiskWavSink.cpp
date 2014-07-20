@@ -2,14 +2,15 @@
 #include "stdafx.h"
 #include "DiskWavSink.h"
 #include <stdio.h>
-#include <iostream>
 #include <assert.h>
 #include "kiss_fft.h"
 #include "kiss_fftr.h"
+#include <iostream>
 
-UINT32 samplesPerSecond;
-UINT32 numberOfChannels;
 PWAVEFORMATEX m_pwfx;
+byte* recordBuffer;;
+int maxSamples;
+int heldSamples = 0;
 
 DiskWavSink::DiskWavSink()
 {
@@ -20,21 +21,27 @@ DiskWavSink::~DiskWavSink()
 {
 }
 
-HRESULT AudioSink::SetFormat(PWAVEFORMATEX pwfx){
+
+
+HRESULT AudioSink::SetFormat(PWAVEFORMATEX pwfx, UINT32 bufferSize){
 	m_pwfx = pwfx;
+	recordBuffer = new byte[bufferSize * pwfx->nBlockAlign];
+	std::cout << "Record buffer set to: " << (bufferSize * pwfx->nBlockAlign) << " bytes " << std::endl;
 	return 0l;
 }
 
 float readfloat(BYTE * buffer, int offset) {
 
-	float result = 0;
-	for (size_t i = 0; i < 3; i++)
-	{
-		std::cout << *(buffer + offset + i) << ", " ;
-		*((BYTE *) (&result) + (3 - i)) = *(buffer + offset + i);
+	if (buffer == NULL){
+		return 0;
 	}
-
-	return result;
+	byte pbyte = buffer[offset];
+	if (offset % 4 == 0){
+		//data is aligned
+		return  *(int*)(buffer + offset);
+	}
+	throw ExceptionNestedException;
+	
 }
 
 void TestFftReal(const char* title, const kiss_fft_scalar *in, kiss_fft_cpx *out, int N)
@@ -54,26 +61,40 @@ void TestFftReal(const char* title, const kiss_fft_scalar *in, kiss_fft_cpx *out
 	}
 }
 
+int offset;
+
+
+
+
+
 HRESULT AudioSink::CopyData(BYTE *data, UINT32 availableFrames, BOOL *done){
 
-	int numberOfSamples = availableFrames / 4;
-	assert(numberOfSamples);
+	memcpy((void*)recordBuffer, data, availableFrames * m_pwfx->nBlockAlign);
 
-	float * realSamples = new float[numberOfSamples];
 
-	for (size_t i = 0; i < availableFrames; i = i + 2 * sizeof(float))
+
+	for (size_t i = 0; i < availableFrames; i++)
 	{
-		float left = readfloat(data, i);
-		float right = readfloat(data, i + sizeof(float));
-		float total = left + right;
-		realSamples[i / (2 * sizeof(float))];
+
+		std::cout << (short) data[i] << std::endl;
+
 	}
 
-	std::cout << std::endl;
-	kiss_fft_cpx * complexOut = new kiss_fft_cpx[numberOfSamples];
-	TestFftReal("SOMETHING", realSamples, complexOut, numberOfSamples);
-	free(realSamples);
-	free(complexOut);
+
+
+
+	//for (size_t i = 0; i < availableFrames; i = i + 2 * sizeof(float))
+	//{
+	//	float left = readfloat(data, i);
+	//	float right = readfloat(data, i + sizeof(float));
+	//	float total = left + right;
+	//	realSamples[i / (2 * sizeof(float))] = total;
+	//}
+
+	//std::cout << std::endl;
+	//kiss_fft_cpx * complexOut = new kiss_fft_cpx[numberOfSamples];
+	//TestFftReal("SOMETHING", realSamples, complexOut, numberOfSamples);
+	//delete[] (complexOut);
 
 	return 0;
 }

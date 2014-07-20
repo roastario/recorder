@@ -16,7 +16,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	Recorder * recorder = new Recorder();
 
 	HRESULT result = recorder->RecordAudioStream(diskSink);
-	 
+
 	return result;
 }
-
